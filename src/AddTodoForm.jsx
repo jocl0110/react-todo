@@ -6,7 +6,7 @@ function AddTodoForm ({onAddTodo}) {
 
     const [todoTitle, setTodoTitle] = React.useState('')
 
-    function handleTitleChange (event) {
+    const handleTitleChange = (event) => {
         const newTodoTitle = event.target.value;
         console.log(newTodoTitle)
         setTodoTitle(newTodoTitle)
@@ -15,7 +15,7 @@ function AddTodoForm ({onAddTodo}) {
     const handleAddTodo = (event) => {
         event.preventDefault();
         onAddTodo({title: todoTitle, id: Date.now()});
-        setTodoTitle(' ');
+        setTodoTitle('');
     }
     return (
         <form onSubmit={handleAddTodo}>
