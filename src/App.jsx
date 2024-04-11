@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import './TodoList'
 import TodoList from './TodoList'
@@ -21,6 +19,7 @@ const useSemiPersistentState = () => {
     return [todoList, setTodoList];
 }
 
+
 function App() {
 
   const [todoList, setTodoList] = useSemiPersistentState();
@@ -29,12 +28,17 @@ function App() {
     setTodoList([...todoList, newTodo])
   }
 
+  const removeTodo = (id) => {
+    const newTodoList = todoList.filter(todo => todo.id !== id)
+    setTodoList(newTodoList);
+  }
+
 
   return (  
     <div>
       <h1>Todo List</h1>
       <AddTodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList}/>
+      <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
     </div>
   );
 }
