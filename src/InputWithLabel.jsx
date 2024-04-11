@@ -10,7 +10,6 @@ const InputWithLabel = (props) => {
         <label htmlFor={props.id}>{props.children}</label>
         <input 
             id={props.id}
-            name={props.name} 
             required={props.required}
             value={props.value} 
             onChange={props.onChange}
