@@ -15,34 +15,28 @@ function App() {
 
 
     React.useEffect(() =>{
-      const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList'));
-    if (savedTodoList) {
-      setTodoList(savedTodoList);
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 2000)
-    }else{
+      const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
       const fetchData = new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve({data: {todoList: todoList}})
+          resolve({data: {todoList: savedTodoList}})
         }, 2000)
       });
-
+      
       fetchData.then((result) => {
         setTodoList(result.data.todoList);
         setIsLoading(false);
       })
-    }
   }, [])
 
 
-     
+ 
 
     React.useEffect(() => {
       if(isLoading === false){
       localStorage.setItem('savedTodoList' , JSON.stringify(todoList))
       }
     }, [todoList]);
+    
 
 
   
