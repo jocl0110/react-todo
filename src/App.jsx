@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './App.css'
 import './TodoList'
 import TodoList from './TodoList'
@@ -6,7 +6,7 @@ import './AddTodoForm'
 import AddTodoForm from './AddTodoForm'
 
 
-console.log("Hello")
+
 function App() {
 
   const [todoList, setTodoList] = React.useState([]);
@@ -28,26 +28,18 @@ function App() {
       })
   }, [])
 
+ 
 
-
-
-
-  const [todoList, setTodoList] = React.useState(() => {
-
-    const savedTodoList = localStorage.getItem('savedTodoList')
-    return JSON.parse(savedTodoList) || [];
-  });
-  
     React.useEffect(() => {
+      if(isLoading === false){
       localStorage.setItem('savedTodoList' , JSON.stringify(todoList))
+      }
     }, [todoList]);
-    return [todoList, setTodoList];
-}
+    
 
-
-function App() {
 
   
+
   const addTodo = (newTodo) => {
     setTodoList([...todoList, newTodo])
   }
@@ -62,10 +54,13 @@ function App() {
     <div>
       <h1>Todo List</h1>
       <AddTodoForm onAddTodo={addTodo} />
-      <TodoList todoList={todoList} onRemoveTodo={removeTodo}/>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+      )}
     </div>
   );
 }
 
 export default App
- 
