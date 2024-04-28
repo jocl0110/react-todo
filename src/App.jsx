@@ -5,7 +5,32 @@ import TodoList from './TodoList'
 import './AddTodoForm'
 import AddTodoForm from './AddTodoForm'
 
-const useSemiPersistentState = () => {
+
+console.log("Hello")
+function App() {
+
+  const [todoList, setTodoList] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+
+
+    React.useEffect(() =>{
+      const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
+      const fetchData = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve({data: {todoList: savedTodoList}})
+        }, 2000)
+      });
+      
+      fetchData.then((result) => {
+        setTodoList(result.data.todoList);
+        setIsLoading(false);
+      })
+  }, [])
+
+
+
+
 
   const [todoList, setTodoList] = React.useState(() => {
 
@@ -22,7 +47,6 @@ const useSemiPersistentState = () => {
 
 function App() {
 
-  const [todoList, setTodoList] = useSemiPersistentState();
   
   const addTodo = (newTodo) => {
     setTodoList([...todoList, newTodo])
@@ -44,3 +68,4 @@ function App() {
 }
 
 export default App
+ 
