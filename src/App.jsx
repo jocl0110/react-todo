@@ -6,7 +6,7 @@ import './AddTodoForm'
 import AddTodoForm from './AddTodoForm'
 
 
-
+console.log("Hello")
 function App() {
 
   const [todoList, setTodoList] = React.useState([]);
@@ -29,7 +29,7 @@ function App() {
   }, [])
 
 
- 
+
 
     React.useEffect(() => {
       if(isLoading === false){
@@ -65,3 +65,4 @@ function App() {
 }
 
 export default App
+ 
