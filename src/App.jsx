@@ -12,20 +12,32 @@ function App() {
   const [todoList, setTodoList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
-
+    const fetchData = async() => {
+      const options = {
+        method: 'GET',
+        headers:  {Authorization:`Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`} 
+      }
+      const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+      try{
+        const response = await fetch(url, options)
+        if(!response.ok){
+          const message = `Error :${response.status}`
+          throw new Error(message);
+        }
+        const data = await response.json();
+        const todos = data.records.map(record => ({
+          title: record.fields.Name,
+          id: record.id
+        }));
+        setTodoList(todos)
+        setIsLoading(false);
+       }catch (error){
+        console.log(error.message)
+       }
+    }
 
     React.useEffect(() =>{
-      const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
-      const fetchData = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve({data: {todoList: savedTodoList}})
-        }, 2000)
-      });
-      
-      fetchData.then((result) => {
-        setTodoList(result.data.todoList);
-        setIsLoading(false);
-      })
+      fetchData(); 
   }, [])
 
  
@@ -63,4 +75,6 @@ function App() {
   );
 }
 
+lesson-1-8
 export default App
+
