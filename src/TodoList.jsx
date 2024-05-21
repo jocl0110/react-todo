@@ -6,7 +6,7 @@ import TodoListItem from "./TodoListItem";
 function TodoList ({todoList, onRemoveTodo}) {
     return (
         <ul>
-        {todoList.map(function (item) {
+        {todoList.map((item) => {
           return(
           <TodoListItem key={item.id} item={item} onRemoveTodo={onRemoveTodo}/>
           );
