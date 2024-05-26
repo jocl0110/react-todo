@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -19,16 +21,15 @@ function AddTodoForm ({onAddTodo}) {
         setTodoTitle('');
     }
     return (
-        <form onSubmit={handleAddTodo}>
+        <form className="form" onSubmit={handleAddTodo}>
             <InputWithLabel
             id = "list"
             required
             value = {todoTitle}
             onChange = {handleTitleChange}
-            >
-            Title    
+            >  
             </InputWithLabel>
-            <button type="submit">Add</button>
+            <button className="add-button" type="submit"><FontAwesomeIcon icon={faPlus} /></button>
         </form>
     )
 }

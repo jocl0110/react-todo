@@ -6,16 +6,19 @@ const InputWithLabel = (props) => {
             inputRef.current.focus();
         })
     return(
-        <span>
-        <label htmlFor={props.id}>{props.children}</label>
+        <div className="input-container">
+        <label htmlFor={props.id}>{props.children}Title</label>
         <input 
             id={props.id}
             required={props.required}
             value={props.value} 
             onChange={props.onChange}
             ref={inputRef}
+            placeholder="Task"
+            type="text"
         />
-        </span>
+        
+        </div>
     );
 }
 
