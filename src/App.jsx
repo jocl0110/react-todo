@@ -13,12 +13,14 @@ function App() {
   const [todoList, setTodoList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
+  
+
     const fetchData = async() => {
+      const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
       const options = {
         method: 'GET',
         headers:  {Authorization:`Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`} 
       }
-      const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
       try{
         const response = await fetch(url, options)
         if(!response.ok){
@@ -57,9 +59,24 @@ function App() {
     setTodoList([...todoList, newTodo])
   }
 
-  const removeTodo = (id) => {
-    const newTodoList = todoList.filter(todo => todo.id !== id)
-    setTodoList(newTodoList);
+  const removeTodo = async (id) => {
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
+      const options = {
+        method: "DELETE",
+        headers: {Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`},
+      };
+
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          const message = `Error ${response.status}`;
+          throw new Error(message);
+        }
+        const newTodoList = todoList.filter(todo => todo.id !== id);
+        setTodoList(newTodoList);
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
   }
 
 
