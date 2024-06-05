@@ -1,6 +1,6 @@
 import React from 'react';
-import AddTodoForm from './AddTodoForm';
-import TodoList from './TodoList';
+import AddTodoForm from './components/AddTodoForm';
+import TodoList from './components/TodoList';
 
 
 const TodoListPage = ({addTodo, removeTodo, todoList, isLoading}) => {
@@ -17,5 +17,7 @@ const TodoListPage = ({addTodo, removeTodo, todoList, isLoading}) => {
     </>
   );
 }
+
+
 
 export default TodoListPage;
