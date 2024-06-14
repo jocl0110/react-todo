@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputWithLabel from "./InputWithLabel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
 
 
@@ -64,5 +65,12 @@ function AddTodoForm ({onAddTodo}) {
         </form>
     )
 }
+
+
+AddTodoForm.propTypes = {
+  onAddTodo: PropTypes.func.isRequired,
+};
+
+
 
 export default AddTodoForm

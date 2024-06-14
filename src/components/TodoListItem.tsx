@@ -1,9 +1,19 @@
 import React from "react"
-import TodoList from "./TodoList"
 import style from "./TodoListItem.module.css"
 
+interface Todo {
+   title: string;
+   id: string;
+}
 
-const TodoListItem = ({item, onRemoveTodo}) => {
+interface TodoListItemProps {
+   item: Todo;
+   onRemoveTodo: (id: string) => void;
+}
+
+
+
+const TodoListItem: React.FC<TodoListItemProps> = ({item, onRemoveTodo}) => {
    const handleRemoveTodo = () => {
         onRemoveTodo(item.id);
    };
@@ -16,6 +26,7 @@ return (
    </div>
    );
 };
+
 
 
 export default TodoListItem
