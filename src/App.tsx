@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import TodoListPage from './TodoListPage'
 
 
+
 interface Todo {
   title: string;
   id: string;
@@ -17,31 +18,42 @@ const App: React.FC = () => {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  
-
-    const fetchData = async() => {
-      const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
-      const options = {
-        method: 'GET',
-        headers:  {Authorization:`Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`} 
-      }
-      try{
-        const response = await fetch(url, options)
-        if(!response.ok){
-          const message = `Error :${response.status}`
-          throw new Error(message);
-        }
-        const data = await response.json();
-        const todos = data.records.map((record: any) => ({
-          title: record.fields.Name,
-          id: record.id
-        }));
-        setTodoList(todos)
-        setIsLoading(false);
-       }catch (error){
-        console.log((error as Error).message)
-       }
+  const fetchData = async() => {
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}?view=Grid%20view&sort[0][field]=Name&sort[0][direction]=asc`;
+    const options = {
+      method: 'GET',
+      headers:  {Authorization:`Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`} 
     }
+    try{
+      const response = await fetch(url, options)
+      if(!response.ok){
+        const message = `Error :${response.status}`
+        throw new Error(message);
+      }
+      const data = await response.json();
+
+        const sortedTodos = data.records.sort((objectA: { fields: { Name: string } }, objectB: { fields: { Name: string } }) => {
+        const titleA = objectA.fields.Name.toLowerCase();
+        const titleB = objectB.fields.Name.toLowerCase();
+        if (titleA < titleB) return -1;
+        if (titleA > titleB) return 1;
+        return 0;
+      });
+
+      const todos = sortedTodos.map((record: { fields: { Name: string }; id: string }) => ({
+        title: record.fields.Name,
+        id: record.id
+      }));
+
+      
+      setTodoList(todos)
+      setIsLoading(false);
+     }catch (error){
+      console.error('Error:',(error as Error).message);
+     }
+  }
+
+  
 
     useEffect(() =>{
       fetchData(); 

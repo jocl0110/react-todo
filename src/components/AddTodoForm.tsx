@@ -18,7 +18,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({onAddTodo}) => {
     const [todoTitle, setTodoTitle] = useState<string>('')
 
 
-    const handleAddTodo = async (event: React.FormEvent<HTMLElement>) => {
+    const handleAddTodo = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
     
         if (!todoTitle) return;
@@ -56,7 +56,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({onAddTodo}) => {
       };
 
 
-    const handleTitleChange = (event: React.ChangeEvent<HTMLElement>) => {
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTodoTitle(event.target.value);
     }
     return (
@@ -67,6 +67,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({onAddTodo}) => {
             value = {todoTitle}
             onChange = {handleTitleChange}
             >  
+            Todo:
             </InputWithLabel>
             <button className="add-button" type="submit"><FontAwesomeIcon icon={faPlus} /></button>
         </form>

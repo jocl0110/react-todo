@@ -8,7 +8,7 @@ interface Todo {
 }
 
 interface TodoListProps {
-  todoList: Todo;
+  todoList: Todo[];
   onRemoveTodo: (id: string) => void;
 }
 
@@ -16,7 +16,7 @@ interface TodoListProps {
 const TodoList: React.FC<TodoListProps> = ({todoList, onRemoveTodo}) => {
     return (
         <ul>
-        {todoList.map((item: any) => {
+        {todoList.map((item: Todo) => {
           return(
           <TodoListItem key={item.id} item={item} onRemoveTodo={onRemoveTodo}/>
           );

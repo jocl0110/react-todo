@@ -10,7 +10,7 @@ interface Todo {
 interface TodoListPageProps {
   addTodo: (newTodo: Todo) => void;
   removeTodo: (id: string) => void;
-  todoList: Todo;
+  todoList: Todo[];
   isLoading: boolean;
 }
 
