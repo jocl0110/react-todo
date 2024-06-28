@@ -67,7 +67,6 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({onAddTodo}) => {
             value = {todoTitle}
             onChange = {handleTitleChange}
             >  
-            Todo:
             </InputWithLabel>
             <button className="add-button" type="submit"><FontAwesomeIcon icon={faPlus} /></button>
         </form>

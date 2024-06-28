@@ -3,7 +3,7 @@ import './App.css'
 import './components/TodoList'
 import './components/AddTodoForm'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import TodoListPage from './TodoListPage'
+import TodoListPage from './components/TodoListPage'
 
 
 
@@ -17,6 +17,7 @@ const App: React.FC = () => {
 
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState(false)
 
   const fetchData = async() => {
     const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}?view=Grid%20view&sort[0][field]=Name&sort[0][direction]=asc`;
@@ -47,10 +48,14 @@ const App: React.FC = () => {
 
       
       setTodoList(todos)
-      setIsLoading(false);
      }catch (error){
       console.error('Error:',(error as Error).message);
+      setError(true);
+    
+     } finally{
+      setIsLoading(false)
      }
+
   }
 
   
@@ -72,7 +77,14 @@ const App: React.FC = () => {
   
 
   const addTodo = (newTodo: Todo) => {
-    setTodoList([...todoList, newTodo])
+    const _newTodoList = [...todoList, newTodo].sort((a, b) => {
+      const titleA = a.title.toLowerCase();
+      const titleB = b.title.toLowerCase();
+      if(titleA < titleB) return -1;
+      if(titleA > titleB) return 1;
+      return 0;
+    })
+    setTodoList(_newTodoList)
   }
 
   const removeTodo = async (id: string) => {
@@ -105,6 +117,7 @@ const App: React.FC = () => {
     isLoading={isLoading}
     addTodo={addTodo}
     removeTodo={removeTodo}
+    error={error}
     />}>
     </Route>
     <Route path='/new' element={<h1>New Todo List</h1>}></Route>
@@ -112,6 +125,7 @@ const App: React.FC = () => {
     </BrowserRouter>
   );
 }
+console.log("Hello World")
 
 export default App
 
