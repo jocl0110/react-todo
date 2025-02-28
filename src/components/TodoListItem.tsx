@@ -1,32 +1,30 @@
-import React from "react"
-import style from "./TodoListItem.module.css"
-
-interface Todo {
-   title: string;
-   id: string;
-}
+import React from "react";
+import style from "./TodoListItem.module.css";
+import { Todo } from "./TodoList";
 
 interface TodoListItemProps {
-   item: Todo;
-   onRemoveTodo: (id: string) => void;
+  item: Todo;
+  onRemoveTodo: (id: string) => void;
 }
 
+const TodoListItem: React.FC<TodoListItemProps> = ({ item, onRemoveTodo }) => {
+  const handleRemoveTodo = () => {
+    onRemoveTodo(item.id);
+  };
 
-
-const TodoListItem: React.FC<TodoListItemProps> = ({item, onRemoveTodo}) => {
-   const handleRemoveTodo = () => {
-        onRemoveTodo(item.id);
-   };
-    
-return ( 
-   <div className="list-container">
-   <input type="checkbox" />
-   <li className={style.ListItem}>{item.title}</li>
-   <button className="remove-button" onClick={handleRemoveTodo} type="button">Remove</button>
-   </div>
-   );
+  return (
+    <div className="list-container">
+      <input type="checkbox" checked={item.completed} />
+      <li className={style.ListItem}>{item.title}</li>
+      <button
+        className="remove-button"
+        onClick={handleRemoveTodo}
+        type="button"
+      >
+        Remove
+      </button>
+    </div>
+  );
 };
 
-
-
-export default TodoListItem
+export default TodoListItem;

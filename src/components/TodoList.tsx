@@ -1,10 +1,10 @@
 import React from "react";
 import TodoListItem from "./TodoListItem";
 
-
-interface Todo {
+export interface Todo {
   id: string;
   title: string;
+  completed: boolean;
 }
 
 interface TodoListProps {
@@ -12,19 +12,16 @@ interface TodoListProps {
   onRemoveTodo: (id: string) => void;
 }
 
+const TodoList: React.FC<TodoListProps> = ({ todoList, onRemoveTodo }) => {
+  return (
+    <ul>
+      {todoList.map((item: Todo) => {
+        return (
+          <TodoListItem key={item.id} item={item} onRemoveTodo={onRemoveTodo} />
+        );
+      })}
+    </ul>
+  );
+};
 
-const TodoList: React.FC<TodoListProps> = ({todoList, onRemoveTodo}) => {
-    return (
-        <ul>
-        {todoList.map((item: Todo) => {
-          return(
-          <TodoListItem key={item.id} item={item} onRemoveTodo={onRemoveTodo}/>
-          );
-        })}
-      </ul>
-    )
-}
-
-
-
-export default TodoList
+export default TodoList;
