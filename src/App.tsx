@@ -4,15 +4,12 @@ import "./components/TodoList";
 import "./components/AddTodoForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TodoListPage from "./components/TodoListPage";
-
-interface Todo {
-  title: string;
-  id: string;
-}
+import { Todo } from "./components/TodoList";
 
 const App = (): JSX.Element => {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [sortByName, setSortByName] = useState<boolean>(false);
   const [error, setError] = useState(false);
 
   const fetchData = async () => {
@@ -34,6 +31,7 @@ const App = (): JSX.Element => {
         throw new Error(message);
       }
       const data = await response.json();
+      console.log(data);
 
       const sortedTodos = data.records.sort(
         (
@@ -128,6 +126,5 @@ const App = (): JSX.Element => {
     </BrowserRouter>
   );
 };
-console.log("Hello World");
 
 export default App;
