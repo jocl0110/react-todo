@@ -14,7 +14,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ item, onRemoveTodo }) => {
 
   return (
     <div className="list-container">
-      <input type="checkbox" checked={item.completed} />
+      <input type="checkbox" />
       <li className={style.ListItem}>{item.title}</li>
       <button
         className="remove-button"
