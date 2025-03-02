@@ -9,6 +9,7 @@ interface TodoListPageProps {
   todoList: Todo[];
   isLoading: boolean;
   error: boolean;
+  setOrder: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TodoListPage: React.FC<TodoListPageProps> = ({
@@ -17,6 +18,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   todoList,
   isLoading,
   error,
+  setOrder,
 }) => {
   const handleReload = () => {
     window.location.reload();
@@ -54,15 +56,11 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
       console.error("Error clearing all todos:", error);
     }
   };
+  const handleOrderByName = () => {
+    setOrder((prevState: boolean) => !prevState);
+    handleReload();
+  };
 
-  if (error) {
-    return (
-      <div>
-        <p>Something went wrong</p>
-        <button onClick={handleReload}>Reload</button>
-      </div>
-    );
-  }
   return (
     <>
       <div>
@@ -70,7 +68,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
         <AddTodoForm onAddTodo={addTodo} />
       </div>
       <div>
-        <button>Sort by Name</button>
+        <button onClick={handleOrderByName}>Sort by Name</button>
         <button>Sort by creation date</button>
       </div>
       <div>

@@ -4,6 +4,7 @@ import TodoListItem from "./TodoListItem";
 export interface Todo {
   id: string;
   title: string;
+  createdTime: string;
 }
 
 interface TodoListProps {
