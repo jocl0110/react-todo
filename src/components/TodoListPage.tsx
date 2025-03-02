@@ -58,7 +58,6 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   };
   const handleOrderByName = () => {
     setOrder((prevState: boolean) => !prevState);
-    handleReload();
   };
 
   return (
