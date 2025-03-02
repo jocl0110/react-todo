@@ -10,6 +10,7 @@ const App = (): JSX.Element => {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [order, setOrder] = useState<boolean>(false);
+  const [sortByDate, setSortByDate] = useState<boolean>(false);
   const [error, setError] = useState(false);
 
   const fetchData = async () => {
@@ -33,7 +34,7 @@ const App = (): JSX.Element => {
         throw new Error(message);
       }
       const data = await response.json();
-      const todos = data.records.map(
+      let todos = data.records.map(
         (task: {
           id: string;
           createdTime: string;
@@ -44,6 +45,15 @@ const App = (): JSX.Element => {
           createdTime: task.createdTime,
         })
       );
+
+      if (sortByDate) {
+        todos = todos.sort((a: Todo, b: Todo) => {
+          return (
+            new Date(a.createdTime).getTime() -
+            new Date(b.createdTime).getTime()
+          );
+        });
+      }
 
       setTodoList(todos);
     } catch (error) {
@@ -56,7 +66,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     fetchData();
-  }, [order]);
+  }, [order, sortByDate]);
 
   useEffect(() => {
     if (isLoading === false) {
@@ -65,14 +75,7 @@ const App = (): JSX.Element => {
   }, [todoList]);
 
   const addTodo = (newTodo: Todo) => {
-    const _newTodoList = [...todoList, newTodo].sort((a, b) => {
-      const titleA = a.title.toLowerCase();
-      const titleB = b.title.toLowerCase();
-      if (titleA < titleB) return -1;
-      if (titleA > titleB) return 1;
-      return 0;
-    });
-    setTodoList(_newTodoList);
+    setTodoList([...todoList, newTodo]);
   };
 
   const removeTodo = async (id: string) => {
@@ -107,6 +110,8 @@ const App = (): JSX.Element => {
           element={
             <TodoListPage
               setOrder={setOrder}
+              setSortByDate={setSortByDate}
+              setTodoList={setTodoList}
               todoList={todoList}
               isLoading={isLoading}
               addTodo={addTodo}

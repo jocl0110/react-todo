@@ -10,6 +10,8 @@ interface TodoListPageProps {
   isLoading: boolean;
   error: boolean;
   setOrder: React.Dispatch<React.SetStateAction<boolean>>;
+  setSortByDate: React.Dispatch<React.SetStateAction<boolean>>;
+  setTodoList: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
 const TodoListPage: React.FC<TodoListPageProps> = ({
@@ -17,12 +19,10 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   removeTodo,
   todoList,
   isLoading,
-  error,
   setOrder,
+  setSortByDate,
+  setTodoList,
 }) => {
-  const handleReload = () => {
-    window.location.reload();
-  };
   const handleClearAll = async () => {
     try {
       const baseURL = `https://api.airtable.com/v0/${
@@ -30,11 +30,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
       }/${import.meta.env.VITE_TABLE_NAME}`;
 
       const recordIds = todoList.map((todo) => todo.id);
-      console.log(recordIds);
-
       const queryParams = recordIds.map((id) => `records[]=${id}`).join("&");
-      console.log(queryParams);
-
       const deleteURL = `${baseURL}?${queryParams}`;
 
       const deleteOptions = {
@@ -50,14 +46,21 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
         throw new Error("Failed to delete todos");
       }
 
-      // Reload the page to refresh the list
-      handleReload();
+      // Clear the local state instead of reloading
+      setTodoList([]);
     } catch (error) {
       console.error("Error clearing all todos:", error);
     }
   };
+
   const handleOrderByName = () => {
+    setSortByDate(false); // Turn off date sorting
     setOrder((prevState: boolean) => !prevState);
+  };
+
+  const handleOrderByDate = () => {
+    setOrder(false); // Turn off name sorting
+    setSortByDate((prevState: boolean) => !prevState);
   };
 
   return (
@@ -68,7 +71,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
       </div>
       <div>
         <button onClick={handleOrderByName}>Sort by Name</button>
-        <button>Sort by creation date</button>
+        <button onClick={handleOrderByDate}>Sort by creation date</button>
       </div>
       <div>
         {isLoading ? (
