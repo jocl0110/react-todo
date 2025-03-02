@@ -33,7 +33,6 @@ const App = (): JSX.Element => {
         throw new Error(message);
       }
       const data = await response.json();
-      console.log(data);
       const todos = data.records.map(
         (task: {
           id: string;
@@ -45,25 +44,6 @@ const App = (): JSX.Element => {
           createdTime: task.createdTime,
         })
       );
-      // const sortedTodos = data.records.sort(
-      //   (
-      //     objectA: { fields: { Name: string } },
-      //     objectB: { fields: { Name: string } }
-      //   ) => {
-      //     const titleA = objectA.fields.Name.toLowerCase();
-      //     const titleB = objectB.fields.Name.toLowerCase();
-      //     if (titleA < titleB) return -1;
-      //     if (titleA > titleB) return 1;
-      //     return 0;
-      //   }
-      // );
-
-      // const todos = sortedTodos.map(
-      //   (record: { fields: { Name: string }; id: string }) => ({
-      //     title: record.fields.Name,
-      //     id: record.id,
-      //   })
-      // );
 
       setTodoList(todos);
     } catch (error) {
@@ -76,7 +56,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [order]);
 
   useEffect(() => {
     if (isLoading === false) {
@@ -118,8 +98,6 @@ const App = (): JSX.Element => {
       console.error("Error:", (error as Error).message);
     }
   };
-  console.log(order);
-  console.log(todoList);
 
   return (
     <BrowserRouter>
