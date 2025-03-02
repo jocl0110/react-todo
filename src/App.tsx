@@ -9,7 +9,7 @@ import { Todo } from "./components/TodoList";
 const App = (): JSX.Element => {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [sortByName, setSortByName] = useState<boolean>(false);
+  const [order, setOrder] = useState<boolean>(false);
   const [error, setError] = useState(false);
 
   const fetchData = async () => {
@@ -17,7 +17,9 @@ const App = (): JSX.Element => {
       import.meta.env.VITE_AIRTABLE_BASE_ID
     }/${
       import.meta.env.VITE_TABLE_NAME
-    }?view=Grid%20view&sort[0][field]=Name&sort[0][direction]=asc`;
+    }?view=Grid%20view&sort[0][field]=Name&sort[0][direction]=${
+      order ? "asc" : "desc"
+    }`;
     const options = {
       method: "GET",
       headers: {
@@ -32,26 +34,36 @@ const App = (): JSX.Element => {
       }
       const data = await response.json();
       console.log(data);
-
-      const sortedTodos = data.records.sort(
-        (
-          objectA: { fields: { Name: string } },
-          objectB: { fields: { Name: string } }
-        ) => {
-          const titleA = objectA.fields.Name.toLowerCase();
-          const titleB = objectB.fields.Name.toLowerCase();
-          if (titleA < titleB) return -1;
-          if (titleA > titleB) return 1;
-          return 0;
-        }
-      );
-
-      const todos = sortedTodos.map(
-        (record: { fields: { Name: string }; id: string }) => ({
-          title: record.fields.Name,
-          id: record.id,
+      const todos = data.records.map(
+        (task: {
+          id: string;
+          createdTime: string;
+          fields: { Name: string };
+        }) => ({
+          title: task.fields.Name,
+          id: task.id,
+          createdTime: task.createdTime,
         })
       );
+      // const sortedTodos = data.records.sort(
+      //   (
+      //     objectA: { fields: { Name: string } },
+      //     objectB: { fields: { Name: string } }
+      //   ) => {
+      //     const titleA = objectA.fields.Name.toLowerCase();
+      //     const titleB = objectB.fields.Name.toLowerCase();
+      //     if (titleA < titleB) return -1;
+      //     if (titleA > titleB) return 1;
+      //     return 0;
+      //   }
+      // );
+
+      // const todos = sortedTodos.map(
+      //   (record: { fields: { Name: string }; id: string }) => ({
+      //     title: record.fields.Name,
+      //     id: record.id,
+      //   })
+      // );
 
       setTodoList(todos);
     } catch (error) {
@@ -106,6 +118,8 @@ const App = (): JSX.Element => {
       console.error("Error:", (error as Error).message);
     }
   };
+  console.log(order);
+  console.log(todoList);
 
   return (
     <BrowserRouter>
@@ -114,6 +128,7 @@ const App = (): JSX.Element => {
           path="/"
           element={
             <TodoListPage
+              setOrder={setOrder}
               todoList={todoList}
               isLoading={isLoading}
               addTodo={addTodo}
