@@ -43,6 +43,7 @@ const AddTodoForm: React.FC<AddTodoFormProps> = ({ onAddTodo }) => {
         id: data.id,
         title: data.fields.Name,
         createdTime: data.createdTime,
+        completed: data.fields.completed,
       };
       onAddTodo(newTodo);
       setTodoTitle("");

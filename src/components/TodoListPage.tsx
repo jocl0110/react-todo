@@ -19,6 +19,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   removeTodo,
   todoList,
   isLoading,
+  error,
   setOrder,
   setSortByDate,
   setTodoList,

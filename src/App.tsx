@@ -34,15 +34,18 @@ const App = (): JSX.Element => {
         throw new Error(message);
       }
       const data = await response.json();
+      console.log(data);
+
       let todos = data.records.map(
         (task: {
           id: string;
           createdTime: string;
-          fields: { Name: string };
+          fields: { Name: string; completed: boolean };
         }) => ({
           title: task.fields.Name,
           id: task.id,
           createdTime: task.createdTime,
+          completed: false,
         })
       );
 
