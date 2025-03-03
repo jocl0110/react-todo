@@ -10,15 +10,25 @@ export interface Todo {
 
 interface TodoListProps {
   todoList: Todo[];
+  setTodoList: React.Dispatch<React.SetStateAction<Todo[]>>;
   onRemoveTodo: (id: string) => void;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todoList, onRemoveTodo }) => {
+const TodoList: React.FC<TodoListProps> = ({
+  todoList,
+  onRemoveTodo,
+  setTodoList,
+}) => {
   return (
     <ul>
       {todoList.map((item: Todo) => {
         return (
-          <TodoListItem key={item.id} item={item} onRemoveTodo={onRemoveTodo} />
+          <TodoListItem
+            setTodoList={setTodoList}
+            key={item.id}
+            item={item}
+            onRemoveTodo={onRemoveTodo}
+          />
         );
       })}
     </ul>
