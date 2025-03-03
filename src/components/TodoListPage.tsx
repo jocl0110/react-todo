@@ -19,7 +19,6 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   removeTodo,
   todoList,
   isLoading,
-  error,
   setOrder,
   setSortByDate,
   setTodoList,
@@ -63,6 +62,7 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
     setOrder(false); // Turn off name sorting
     setSortByDate((prevState: boolean) => !prevState);
   };
+  const completedTasksCount = todoList.filter((todo) => todo.completed).length;
 
   return (
     <>
@@ -78,11 +78,16 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
         {isLoading ? (
           <p>Loading...</p>
         ) : (
-          <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+          <TodoList
+            setTodoList={setTodoList}
+            todoList={todoList}
+            onRemoveTodo={removeTodo}
+          />
         )}
       </div>
       <div>
         <p>Number of Tasks: {todoList.length}</p>
+        <p>Task Completed: {completedTasksCount}</p>
         <button onClick={handleClearAll}>Clear All</button>
       </div>
     </>

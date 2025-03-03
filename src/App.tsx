@@ -45,7 +45,7 @@ const App = (): JSX.Element => {
           title: task.fields.Name,
           id: task.id,
           createdTime: task.createdTime,
-          completed: false,
+          completed: task.fields.completed,
         })
       );
 
