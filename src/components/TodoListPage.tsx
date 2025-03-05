@@ -8,7 +8,9 @@ interface TodoListPageProps {
   removeTodo: (id: string) => void;
   todoList: Todo[];
   isLoading: boolean;
-  error: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  message: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
   setOrder: React.Dispatch<React.SetStateAction<boolean>>;
   setSortByDate: React.Dispatch<React.SetStateAction<boolean>>;
   setTodoList: React.Dispatch<React.SetStateAction<Todo[]>>;
@@ -18,38 +20,67 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   addTodo,
   removeTodo,
   todoList,
+  message,
+  setMessage,
   isLoading,
+  setIsLoading,
   setOrder,
   setSortByDate,
   setTodoList,
 }) => {
+  const baseURL = `https://api.airtable.com/v0/${
+    import.meta.env.VITE_AIRTABLE_BASE_ID
+  }/${import.meta.env.VITE_TABLE_NAME}`;
+  const deleteOptions = {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+    },
+  };
   const handleClearAll = async () => {
+    if (todoList.length === 0) {
+      setMessage("You have no task to be cleared");
+      return;
+    }
+    const recordIds = todoList.map((todo) => todo.id);
+    const queryParams = recordIds.map((id) => `records[]=${id}`).join("&");
+    const deleteURL = `${baseURL}?${queryParams}`;
     try {
-      const baseURL = `https://api.airtable.com/v0/${
-        import.meta.env.VITE_AIRTABLE_BASE_ID
-      }/${import.meta.env.VITE_TABLE_NAME}`;
-
-      const recordIds = todoList.map((todo) => todo.id);
-      const queryParams = recordIds.map((id) => `records[]=${id}`).join("&");
-      const deleteURL = `${baseURL}?${queryParams}`;
-
-      const deleteOptions = {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
-        },
-      };
-
       const deleteResponse = await fetch(deleteURL, deleteOptions);
 
       if (!deleteResponse.ok) {
-        throw new Error("Failed to delete todos");
+        setMessage("Failed to delete your tasks");
       }
 
-      // Clear the local state instead of reloading
       setTodoList([]);
     } catch (error) {
-      console.error("Error clearing all todos:", error);
+      setMessage(`Error clearing all task: ${error}`);
+    }
+  };
+  const handleClearCompleted = async () => {
+    try {
+      const completedTaskIds = todoList
+        .filter((task) => task.completed)
+        .map((task) => task.id);
+
+      if (completedTaskIds.length === 0) {
+        setMessage("There are no completed tasks to delete.");
+        return;
+      }
+      const queryParams = completedTaskIds
+        .map((id) => `records[]=${id}`)
+        .join("&");
+      const deleteCompletedURL = `${baseURL}?${queryParams}`;
+      const deleteCompletedResponse = await fetch(
+        deleteCompletedURL,
+        deleteOptions
+      );
+      if (!deleteCompletedResponse.ok) {
+        setMessage("Something went wrong while deleting your tasks");
+      }
+      setTodoList(todoList.filter((task) => !task.completed));
+    } catch (error) {
+      console.log(`Error ${error}`);
     }
   };
 
@@ -65,18 +96,29 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
   const completedTasksCount = todoList.filter((todo) => todo.completed).length;
 
   return (
-    <>
-      <div>
-        <h1 className="header">Todo List</h1>
-        <AddTodoForm onAddTodo={addTodo} />
+    <div className="app-container">
+      <div className="header">
+        <h1>Todo List ✅</h1>
+        <AddTodoForm
+          onAddTodo={addTodo}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          setMessage={setMessage}
+        />
       </div>
-      <div>
-        <button onClick={handleOrderByName}>Sort by Name</button>
-        <button onClick={handleOrderByDate}>Sort by creation date</button>
+      {message && <div className="message-text">{message}</div>}
+
+      <div className="sorting-container">
+        <button className="sorting-button by-date" onClick={handleOrderByName}>
+          Sort by Name
+        </button>
+        <button className="sorting-button by-name" onClick={handleOrderByDate}>
+          Sort by creation date
+        </button>
       </div>
-      <div>
+      <div className="task-wrapper">
         {isLoading ? (
-          <p>Loading...</p>
+          <div className="spinner"></div>
         ) : (
           <TodoList
             setTodoList={setTodoList}
@@ -85,12 +127,24 @@ const TodoListPage: React.FC<TodoListPageProps> = ({
           />
         )}
       </div>
-      <div>
-        <p>Number of Tasks: {todoList.length}</p>
-        <p>Task Completed: {completedTasksCount}</p>
-        <button onClick={handleClearAll}>Clear All</button>
+      <div className="task-controls-container">
+        <p className="stats">
+          Number of Tasks: <strong>{todoList.length}</strong>
+        </p>
+        <p className="stats">
+          Task Completed: <strong>{completedTasksCount}</strong>
+        </p>
+        <button className="control-button clear-all" onClick={handleClearAll}>
+          Clear All
+        </button>
+        <button
+          className="control-button clear-completed"
+          onClick={handleClearCompleted}
+        >
+          Clear Completed
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

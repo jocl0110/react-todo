@@ -11,7 +11,7 @@ const App = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [order, setOrder] = useState<boolean>(false);
   const [sortByDate, setSortByDate] = useState<boolean>(false);
-  const [error, setError] = useState(false);
+  const [message, setMessage] = useState<string>("");
 
   const fetchData = async () => {
     const url = `https://api.airtable.com/v0/${
@@ -29,12 +29,7 @@ const App = (): JSX.Element => {
     };
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        const message = `Error :${response.status}`;
-        throw new Error(message);
-      }
       const data = await response.json();
-      console.log(data);
 
       let todos = data.records.map(
         (task: {
@@ -60,8 +55,7 @@ const App = (): JSX.Element => {
 
       setTodoList(todos);
     } catch (error) {
-      console.error("Error:", (error as Error).message);
-      setError(true);
+      setMessage(`Something went wrong ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +69,13 @@ const App = (): JSX.Element => {
     if (isLoading === false) {
       localStorage.setItem("savedTodoList", JSON.stringify(todoList));
     }
-  }, [todoList]);
+
+    if (message) {
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+    }
+  }, [todoList, message]);
 
   const addTodo = (newTodo: Todo) => {
     setTodoList([...todoList, newTodo]);
@@ -95,13 +95,12 @@ const App = (): JSX.Element => {
     try {
       const response = await fetch(url, options);
       if (!response.ok) {
-        const message = `Error ${response.status}`;
-        throw new Error(message);
+        setMessage("Something happened while deleting a task");
       }
       const newTodoList = todoList.filter((todo) => todo.id !== id);
       setTodoList(newTodoList);
     } catch (error) {
-      console.error("Error:", (error as Error).message);
+      setMessage(`Something happened while deleting a task ${error}`);
     }
   };
 
@@ -117,9 +116,11 @@ const App = (): JSX.Element => {
               setTodoList={setTodoList}
               todoList={todoList}
               isLoading={isLoading}
+              setIsLoading={setIsLoading}
               addTodo={addTodo}
               removeTodo={removeTodo}
-              error={error}
+              message={message}
+              setMessage={setMessage}
             />
           }
         ></Route>
