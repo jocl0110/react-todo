@@ -21,12 +21,14 @@ const TodoList: React.FC<TodoListProps> = ({
 }) => {
   return (
     <ul>
-      {todoList.map((item: Todo) => {
+      {todoList.map((item: Todo, index) => {
         return (
           <TodoListItem
+            todoList={todoList}
             setTodoList={setTodoList}
             key={item.id}
             item={item}
+            index={index}
             onRemoveTodo={onRemoveTodo}
           />
         );
