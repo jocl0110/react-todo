@@ -1,6 +1,6 @@
 # 📝 React Todo App
 
-Welcome to my **React Todo App**! This is one of my first projects built while learning **React**. It’s a simple yet functional application that allows users to manage a list of tasks easily. The app connects to an external **API** to fetch and update todos, giving me hands-on experience working with real data.
+Welcome to my **React Todo App**! This is one of my first projects built while learning **React**. It’s a simple yet functional application that allows users to manage a list of tasks easily. The app connects to Airtable **API** to fetch and update todos, giving me hands-on experience working with real data.
 
 ## 🚀 Features
 - ✅ Add new todos  
